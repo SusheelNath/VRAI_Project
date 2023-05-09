@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     // UI reference
-    public Text scoreText;
+    public Text scoreTextMain;
+    public Text scoreTextGameOver;
 
     // Value to which time is added since start of session
     public float scoreValue;
@@ -22,6 +23,7 @@ public class ScoreManager : MonoBehaviour
         scoreValue += Time.deltaTime;
 
         var intConvertedScore = (int)scoreValue;
-        scoreText.text = intConvertedScore.ToString();
+        scoreTextMain.text = intConvertedScore.ToString();
+        scoreTextGameOver.text = intConvertedScore.ToString();
     }
 }

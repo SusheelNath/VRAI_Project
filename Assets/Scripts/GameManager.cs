@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator RestartSequence()
     {
+        uiManager.gameOverUI.SetActive(true);
+
+        scoreManager.enabled = false;
+
         yield return new WaitForSeconds(2f);
 
         SceneManager.LoadSceneAsync("VRAI_Demo");

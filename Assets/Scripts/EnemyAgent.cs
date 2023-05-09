@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class EnemyAgent : MonoBehaviour
 {
-    AIManager _aiManager;
+    GameManager _gameManager;
 
     [Header("Agent Reference")]
     public NavMeshAgent navMeshAgent;
@@ -29,7 +29,7 @@ public class EnemyAgent : MonoBehaviour
 
     void Start()
     {
-        _aiManager = FindObjectOfType<AIManager>();
+        _gameManager = FindObjectOfType<GameManager>();
 
         _playerPosition = Vector3.zero;
 
@@ -155,6 +155,6 @@ public class EnemyAgent : MonoBehaviour
     // Player has been caught and Game is over!
     void CaughtPlayer()
     {
-        _aiManager.hasGameplayEnded = true;
+        _gameManager.RestartScene();
     }
 }
