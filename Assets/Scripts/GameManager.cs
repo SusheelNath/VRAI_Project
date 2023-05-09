@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     bool _isStartGameplay = false;
-    bool _isGameOver = false;
 
     [Header("Script References")]
     public ScoreManager scoreManager;
@@ -30,20 +30,18 @@ public class GameManager : MonoBehaviour
                 uiManager.SetFPSControllersActive();
             }
         }
-
-        if(_isGameOver)
-        {
-            //todo: Add in logic of NavMeshAgents talking to NavMeshManager (crete script)
-            //and setting _isGameOver = true on collider touch with player
-
-            //todo: Load Game Over UI from UI Manager
-            RestartScene();
-        }
     }
 
-    void RestartScene()
+    // Restart Gameplay
+    public void RestartScene()
     {
-        //todo: add scene to build and rename scene to below
+        StartCoroutine(RestartSequence());
+    }
+
+    IEnumerator RestartSequence()
+    {
+        yield return new WaitForSeconds(2f);
+
         SceneManager.LoadSceneAsync("VRAI_Demo");
     }
 }
