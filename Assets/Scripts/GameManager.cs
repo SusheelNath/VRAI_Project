@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script responsible for managing entire gameplay and sequencing
@@ -6,20 +7,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     bool _isStartGameplay = false;
+    bool _isGameOver = false;
 
-    [Header("Scoring Component References")]
+    [Header("Script References")]
     public ScoreManager scoreManager;
-    public GameObject scoreBoardGO;
-
-    [Header("Starting UI")]
-    public GameObject startGameplayUI;
-
-    [Header("FPS Controller Script References")]
-    public PlayerMovementController fpcMovement;
-    public PlayerViewController fpcView;
-
-    [Header("Minimap UI")]
-    public GameObject minimapGO;
+    public UIManager uiManager;
 
     void Update()
     {
@@ -31,31 +23,27 @@ public class GameManager : MonoBehaviour
                 _isStartGameplay = true;
 
                 // Begin Gameplay Sequencing
-                SetScoringComponentActive();
-                StartGameplay();
-                SetFPSControllersActive();
+                scoreManager.gameObject.SetActive(true);
+
+                uiManager.SetScoringComponentActive();
+                uiManager.StartGameplay();
+                uiManager.SetFPSControllersActive();
             }
+        }
+
+        if(_isGameOver)
+        {
+            //todo: Add in logic of NavMeshAgents talking to NavMeshManager (crete script)
+            //and setting _isGameOver = true on collider touch with player
+
+            //todo: Load Game Over UI from UI Manager
+            RestartScene();
         }
     }
 
-    // Activate scoring components
-    void SetScoringComponentActive()
+    void RestartScene()
     {
-        scoreManager.gameObject.SetActive(true);
-        scoreBoardGO.SetActive(true);
-    }
-
-    // Disable starting UI and enable minimap
-    void StartGameplay()
-    {
-        startGameplayUI.SetActive(false);
-        minimapGO.SetActive(true);
-    }
-
-    // Activate FPS Controller scripts
-    void SetFPSControllersActive()
-    {
-        fpcMovement.enabled = true;
-        fpcView.enabled = true;
+        //todo: add scene to build and rename scene to below
+        SceneManager.LoadSceneAsync("VRAI_Demo");
     }
 }
