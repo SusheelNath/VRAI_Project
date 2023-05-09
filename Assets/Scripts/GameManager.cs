@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     public PlayerMovementController fpcMovement;
     public PlayerViewController fpcView;
 
+    [Header("Minimap UI")]
+    public GameObject minimapGO;
+
     void Update()
     {
         if(_isStartGameplay == false)
@@ -42,10 +45,11 @@ public class GameManager : MonoBehaviour
         scoreBoardGO.SetActive(true);
     }
 
-    // Activate scoring components
+    // Disable starting UI and enable minimap
     void StartGameplay()
     {
         startGameplayUI.SetActive(false);
+        minimapGO.SetActive(true);
     }
 
     // Activate FPS Controller scripts
