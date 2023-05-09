@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Script containing all UI references
@@ -8,8 +9,9 @@ public class UIManager : MonoBehaviour
     [Header("Scoring Component References")]
     public GameObject scoreBoardGO;
 
-    [Header("Starting UI")]
+    [Header("UI Panels")]
     public GameObject startGameplayUI;
+    public GameObject gameOverUI;
 
     [Header("FPS Controller Script References")]
     public PlayerMovementController fpcMovement;
