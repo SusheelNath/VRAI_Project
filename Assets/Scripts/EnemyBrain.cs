@@ -40,9 +40,6 @@ public class EnemyBrain : MonoBehaviour
         navMeshAgent.speed = speed;
         navMeshAgent.acceleration = acceleration;
         navMeshAgent.stoppingDistance = stoppingDistanceToPlayer;
-
-        // Assign initial random position/patrol
-        navMeshAgent.SetDestination(_aiManager.RandomNavSphere(transform.position, 10f, -1));
     }
 
     void Update()

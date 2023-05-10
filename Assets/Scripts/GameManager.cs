@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
                 // Begin Gameplay Sequencing
                 uiManager.SetBeginGameplayUI();
                 SetFPComponentsActive();
+                SetEnemyAgentSpawnersActive();
             }
         }
     }
@@ -45,6 +46,17 @@ public class GameManager : MonoBehaviour
         fpcMovement.enabled = true;
         fpcView.enabled = true;
         fpBrain.enabled = true;
+    }
+
+    // Find all agent spawners in scene and activate
+    void SetEnemyAgentSpawnersActive()
+    {
+        var spawners = FindObjectsOfType<EnemyAgentPool>();
+
+        foreach(EnemyAgentPool sp in spawners)
+        {
+            sp.enabled = true;
+        }
     }
 
     // Sequencing for restart gameplay
