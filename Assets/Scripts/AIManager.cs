@@ -83,26 +83,18 @@ public class AIManager : MonoBehaviour
             {
                 // If Raycast hit agent, stop agent
                 if (!Physics.Raycast(player.position, dirToAgent, dstToAgent, obstacleMask))
-                {
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().StopMovement();
-                }
                 // Agent is behind obstacle and will resume its movement
                 else
-                {
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().ResumeMovement();
-                }
             }
             // Resume movement
             else
-            {
                 _agentInQuestion.gameObject.GetComponent<EnemyBrain>().ResumeMovement();
-            }
 
             // If not in view range, resume movement
             if (Vector3.Distance(player.position, _agentPosition) > viewRadius)
-            {
                 _agentInQuestion.gameObject.GetComponent<EnemyBrain>().ResumeMovement();
-            }
         }
     }
 
@@ -136,21 +128,15 @@ public class AIManager : MonoBehaviour
             {                
                 // If Raycast hit player, chase player
                 if (!Physics.Raycast(agent.position, dirToPlayer, dstToPlayer, obstacleMask))
-                {
                     selfBrain.isPatrolling = false;
-                }
                 // Player is behind obstacle and agent will stop chasing
                 else
-                {
                     selfBrain.isPatrolling = true;
-                }
             }
 
             // If not in view range, change state to patrolling
             if (Vector3.Distance(agent.position, _playerPosition) > agentScanRadius)
-            {
                 selfBrain.isPatrolling = true;
-            }
         }
     }
 }
