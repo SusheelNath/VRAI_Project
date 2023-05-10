@@ -109,8 +109,8 @@ public class AIManager : MonoBehaviour
     // Physics Overlapping Sphere to check for player position and vicinity (Concerned with EnemyBrain)
     public void CheckForPlayerAround(Transform agent, EnemyBrain selfBrain)
     {
-        // View radius 1.5 times than player's permitted
-        var agentScanRadius = 1.5f * viewRadius;
+        // View radius 2 times than player's permitted
+        var agentScanRadius = 2f * viewRadius;
 
         //  Create overlapping colliders to detect the playermask in the agent's scan radius 
         Collider[] playerInRange = Physics.OverlapSphere(agent.position, agentScanRadius, playerMask);
@@ -128,12 +128,12 @@ public class AIManager : MonoBehaviour
             //  Distance between enemy and player
             float dstToPlayer = Vector3.Distance(agent.position, _playerPosition);
 
-            // View angle 1.5 times than player's permitted
-            var agentViewAngle = 1.5f * viewAngle;
+            // View angle 2 times than player's permitted
+            var agentViewAngle = 2f * viewAngle;
 
             // If in agent's view angle
             if (Vector3.Angle(agent.forward, dirToPlayer) < agentViewAngle / 2)
-            {
+            {                
                 // If Raycast hit player, chase player
                 if (!Physics.Raycast(agent.position, dirToPlayer, dstToPlayer, obstacleMask))
                 {
