@@ -10,8 +10,12 @@ public class GameManager : MonoBehaviour
     bool _isStartGameplay = false;
 
     [Header("Script References")]
-    public ScoreManager scoreManager;
     public UIManager uiManager;
+
+    [Header("First Person Script References")]
+    public PlayerMovementController fpcMovement;
+    public PlayerViewController fpcView;
+    public PlayerBrain fpBrain;
 
     void Update()
     {
@@ -23,11 +27,8 @@ public class GameManager : MonoBehaviour
                 _isStartGameplay = true;
 
                 // Begin Gameplay Sequencing
-                scoreManager.gameObject.SetActive(true);
-
-                uiManager.SetScoringComponentActive();
-                uiManager.StartGameplay();
-                uiManager.SetFPSControllersActive();
+                uiManager.SetBeginGameplayUI();
+                SetFPComponentsActive();
             }
         }
     }
@@ -38,14 +39,23 @@ public class GameManager : MonoBehaviour
         StartCoroutine(RestartSequence());
     }
 
+    // Activate First Person Component scripts
+    public void SetFPComponentsActive()
+    {
+        fpcMovement.enabled = true;
+        fpcView.enabled = true;
+        fpBrain.enabled = true;
+    }
+
+    // Sequencing for restart gameplay
     IEnumerator RestartSequence()
     {
-        uiManager.gameOverUI.SetActive(true);
-
-        scoreManager.enabled = false;
+        // End Gameplay Sequencing
+        uiManager.SetEndGameplayUI();
 
         yield return new WaitForSeconds(2f);
 
+        // Load/Reload scene
         SceneManager.LoadSceneAsync("VRAI_Demo");
     }
 }
