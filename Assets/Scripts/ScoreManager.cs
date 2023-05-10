@@ -20,10 +20,14 @@ public class ScoreManager : MonoBehaviour
 
     void Update()
     {
+        // Increment score over time
         scoreValue += Time.deltaTime;
 
-        var intConvertedScore = (int)scoreValue;
-        scoreTextMain.text = intConvertedScore.ToString();
-        scoreTextGameOver.text = intConvertedScore.ToString();
+        // Convert to int (whole numbers)
+        var _intConvertedScore = (int)scoreValue;
+
+        // Assing score to in-game score board and post game results
+        scoreTextMain.text = _intConvertedScore.ToString();
+        scoreTextGameOver.text = _intConvertedScore.ToString();
     }
 }

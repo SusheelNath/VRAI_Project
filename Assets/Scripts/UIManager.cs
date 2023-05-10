@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// Script containing all UI references
@@ -8,35 +7,30 @@ public class UIManager : MonoBehaviour
 {
     [Header("Scoring Component References")]
     public GameObject scoreBoardGO;
+    public GameObject scoreManagerGO;
 
     [Header("UI Panels")]
-    public GameObject startGameplayUI;
+    public GameObject welcomeUI;
     public GameObject gameOverUI;
-
-    [Header("FPS Controller Script References")]
-    public PlayerMovementController fpcMovement;
-    public PlayerViewController fpcView;
 
     [Header("Minimap UI")]
     public GameObject minimapGO;
 
-    // Activate scoring components
-    public void SetScoringComponentActive()
+    // Present Start Gameplay Sequence UI
+    public void SetBeginGameplayUI()
     {
-        scoreBoardGO.SetActive(true);
-    }
-
-    // Disable starting UI and enable minimap
-    public void StartGameplay()
-    {
-        startGameplayUI.SetActive(false);
+        welcomeUI.SetActive(false);
         minimapGO.SetActive(true);
+        scoreBoardGO.SetActive(true);
+        scoreManagerGO.SetActive(true);
     }
 
-    // Activate FPS Controller scripts
-    public void SetFPSControllersActive()
+    // Present End Gameplay Sequence UI
+    public void SetEndGameplayUI()
     {
-        fpcMovement.enabled = true;
-        fpcView.enabled = true;
+        gameOverUI.SetActive(true);
+        minimapGO.SetActive(false);
+        scoreBoardGO.SetActive(false);
+        scoreManagerGO.SetActive(false);
     }
 }
