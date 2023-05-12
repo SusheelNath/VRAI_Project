@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerBrain : MonoBehaviour
 {
     AIManager _aiManager;
+    ViewLineRenderManager _lineRenderManager;
 
     public Transform lineRendererStartPoint;
     public Transform lineRendererEndPoint;
@@ -16,9 +17,10 @@ public class PlayerBrain : MonoBehaviour
     void Start()
     {
         _aiManager = FindObjectOfType<AIManager>();
+        _lineRenderManager = FindAnyObjectByType<ViewLineRenderManager>();
 
         // Initialise player view renderer
-        InitialisePlayerViewRenderer();
+        _lineRenderManager.InitialisePlayerViewRenderer(playerViewRenderer);
     }
 
     void Update()
@@ -27,21 +29,6 @@ public class PlayerBrain : MonoBehaviour
         _aiManager.CheckForAgentsAround(transform);
 
         // Draw render line from player position to their line of sight
-        DrawPlayerView();
-    }
-
-    // Renders path of travel of agent
-    void DrawPlayerView()
-    {
-        playerViewRenderer.SetPosition(0, lineRendererStartPoint.transform.position);
-        playerViewRenderer.SetPosition(1, lineRendererEndPoint.position);
-    }
-
-    // Set player view renderer details
-    void InitialisePlayerViewRenderer()
-    {
-        playerViewRenderer.startWidth = 0.8f;
-        playerViewRenderer.endWidth = 0.8f;
-        playerViewRenderer.positionCount = 2;
+        _lineRenderManager.DrawPlayerView(lineRendererStartPoint, lineRendererEndPoint);
     }
 }
