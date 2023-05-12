@@ -1968,7 +1968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controllerObject: {fileID: 923449224}
-  mouseSensitivity: 100
+  mouseSensitivity: 200
 --- !u!1 &1017553485
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,7 +2111,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyAgentPrefab: {fileID: 6028851476313286324, guid: 55d1c6a9362ab461ea04b8f63be68f4a, type: 3}
-  queueLimit: 6
+  agentDetails:
+  - {fileID: 11400000, guid: 5e3f090326ec3427ba0eef5546fbdd1b, type: 2}
+  - {fileID: 11400000, guid: 5eeb4a6dea54d4cfab7365e37cbce0ef, type: 2}
+  - {fileID: 11400000, guid: cbe96348e0e494f5d81be0fe71b80902, type: 2}
+  _queueLimit: 5
+  _agentType: 3
 --- !u!1 &1055131828
 GameObject:
   m_ObjectHideFlags: 0
@@ -2727,7 +2732,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyAgentPrefab: {fileID: 6028851476313286324, guid: 55d1c6a9362ab461ea04b8f63be68f4a, type: 3}
-  queueLimit: 6
+  agentDetails:
+  - {fileID: 11400000, guid: 5e3f090326ec3427ba0eef5546fbdd1b, type: 2}
+  - {fileID: 11400000, guid: 5eeb4a6dea54d4cfab7365e37cbce0ef, type: 2}
+  - {fileID: 11400000, guid: cbe96348e0e494f5d81be0fe71b80902, type: 2}
+  _queueLimit: 5
+  _agentType: 2
 --- !u!1 &1299281164
 GameObject:
   m_ObjectHideFlags: 0
