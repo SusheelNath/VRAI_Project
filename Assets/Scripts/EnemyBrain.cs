@@ -35,6 +35,8 @@ public class EnemyBrain : MonoBehaviour
     // By default, agent is patrolling
     public bool isPatrolling = true;
 
+    private LineRenderer _agentPathRenderer;
+
     void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
@@ -51,6 +53,19 @@ public class EnemyBrain : MonoBehaviour
 
         // Assign Player camera to Agent Canvas
         GetComponentInChildren<Canvas>().worldCamera = Camera.main;
+
+        // Initialise agent path
+        InitialiseAgentPathRenderer();
+    }
+
+    // Set agent path details
+    void InitialiseAgentPathRenderer()
+    {
+        _agentPathRenderer = this.gameObject.GetComponent<LineRenderer>();
+
+        _agentPathRenderer.startWidth = 0.15f;
+        _agentPathRenderer.endWidth = 0.15f;
+        _agentPathRenderer.positionCount = 0;
     }
 
     void Update()
@@ -72,6 +87,10 @@ public class EnemyBrain : MonoBehaviour
         // Agent Name Text always faces player camera
         agentName.transform.LookAt(agentName.transform.position -
             (Camera.main.transform.position - agentName.transform.position));
+
+        // Agent has path, render path
+        if (navMeshAgent.hasPath)
+            DrawAgentPath();
     }
 
     string IDRandomiser()
@@ -87,14 +106,6 @@ public class EnemyBrain : MonoBehaviour
     {
         // Set the destination of the enemy to the player location
         navMeshAgent.SetDestination(playerPosition);
-
-        /*
-        // If Enemy caught upto player's stoppin distance (Default = 1f)
-        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        {
-            CaughtPlayer();
-        }
-        */
     }
 
     //  The agent is patrolling to random valid position on NavMesh
@@ -130,5 +141,19 @@ public class EnemyBrain : MonoBehaviour
     {
         if(collision.transform.tag == "Player")
             CaughtPlayer();
+    }
+
+    // Renders path of travel of agent
+    void DrawAgentPath()
+    {
+        _agentPathRenderer.positionCount = navMeshAgent.path.corners.Length;
+        _agentPathRenderer.SetPosition(0, transform.position);
+
+        for(int i = 1; i < navMeshAgent.path.corners.Length; i++)
+        {
+            Vector3 nextPoint = new Vector3(navMeshAgent.path.corners[i].x,
+                navMeshAgent.path.corners[i].y, navMeshAgent.path.corners[i].z);
+            _agentPathRenderer.SetPosition(i, nextPoint);
+        }
     }
 }

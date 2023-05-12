@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class AIManager : MonoBehaviour
 {
     GameManager _gameManager;
+    NavMeshAgent _navMeshAgent;
 
     [HideInInspector]
     public bool hasGameplayEnded = false;
@@ -125,7 +126,7 @@ public class AIManager : MonoBehaviour
 
             // If in agent's view angle
             if (Vector3.Angle(agent.forward, dirToPlayer) < agentViewAngle / 2)
-            {                
+            {
                 // If Raycast hit player, chase player
                 if (!Physics.Raycast(agent.position, dirToPlayer, dstToPlayer, obstacleMask))
                     selfBrain.isPatrolling = false;
