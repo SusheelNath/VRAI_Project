@@ -8,9 +8,10 @@ public class PlayerBrain : MonoBehaviour
 {
     AIManager _aiManager;
 
-    public Transform playerBody;
+    public Transform lineRendererStartPoint;
+    public Transform lineRendererEndPoint;
 
-    LineRenderer _playerViewRenderer;
+    public LineRenderer playerViewRenderer;
 
     void Start()
     {
@@ -32,17 +33,15 @@ public class PlayerBrain : MonoBehaviour
     // Renders path of travel of agent
     void DrawPlayerView()
     {
-        _playerViewRenderer.SetPosition(0, playerBody.transform.position);
-        _playerViewRenderer.SetPosition(1, playerBody.forward * _aiManager.viewRadius);
+        playerViewRenderer.SetPosition(0, lineRendererStartPoint.transform.position);
+        playerViewRenderer.SetPosition(1, lineRendererEndPoint.position);
     }
 
     // Set player view renderer details
     void InitialisePlayerViewRenderer()
     {
-        _playerViewRenderer = this.gameObject.GetComponent<LineRenderer>();
-
-        _playerViewRenderer.startWidth = 0.15f;
-        _playerViewRenderer.endWidth = 0.15f;
-        _playerViewRenderer.positionCount = 2;
+        playerViewRenderer.startWidth = 0.8f;
+        playerViewRenderer.endWidth = 0.8f;
+        playerViewRenderer.positionCount = 2;
     }
 }
