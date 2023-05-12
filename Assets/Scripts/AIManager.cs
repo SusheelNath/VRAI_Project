@@ -7,7 +7,6 @@ using UnityEngine.AI;
 public class AIManager : MonoBehaviour
 {
     GameManager _gameManager;
-    NavMeshAgent _navMeshAgent;
 
     [HideInInspector]
     public bool hasGameplayEnded = false;
