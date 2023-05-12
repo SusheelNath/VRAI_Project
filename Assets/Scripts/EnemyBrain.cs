@@ -13,7 +13,7 @@ public class EnemyBrain : MonoBehaviour
 
     // Stopping distance to player, closer than which the player is 'caught'
     float _stoppingDistanceToPlayer = 1f;
-    float _acceleration = 8f;
+    float _acceleration = 100f;
 
     [Header("Agent Reference")]
     public NavMeshAgent navMeshAgent;
@@ -35,7 +35,7 @@ public class EnemyBrain : MonoBehaviour
     // By default, agent is patrolling
     public bool isPatrolling = true;
 
-    private LineRenderer _agentPathRenderer;
+    public LineRenderer agentPathRenderer;
 
     void Start()
     {
@@ -54,18 +54,16 @@ public class EnemyBrain : MonoBehaviour
         // Assign Player camera to Agent Canvas
         GetComponentInChildren<Canvas>().worldCamera = Camera.main;
 
-        // Initialise agent path
+        // Initialise agent path renderer
         InitialiseAgentPathRenderer();
     }
 
-    // Set agent path details
+    // Set agent path renderer details
     void InitialiseAgentPathRenderer()
     {
-        _agentPathRenderer = this.gameObject.GetComponent<LineRenderer>();
-
-        _agentPathRenderer.startWidth = 0.15f;
-        _agentPathRenderer.endWidth = 0.15f;
-        _agentPathRenderer.positionCount = 0;
+        agentPathRenderer.startWidth = 0.8f;
+        agentPathRenderer.endWidth = 0.8f;
+        agentPathRenderer.positionCount = 0;
     }
 
     void Update()
@@ -146,14 +144,14 @@ public class EnemyBrain : MonoBehaviour
     // Renders path of travel of agent
     void DrawAgentPath()
     {
-        _agentPathRenderer.positionCount = navMeshAgent.path.corners.Length;
-        _agentPathRenderer.SetPosition(0, transform.position);
+        agentPathRenderer.positionCount = navMeshAgent.path.corners.Length;
+        agentPathRenderer.SetPosition(0, transform.position);
 
         for(int i = 1; i < navMeshAgent.path.corners.Length; i++)
         {
             Vector3 nextPoint = new Vector3(navMeshAgent.path.corners[i].x,
                 navMeshAgent.path.corners[i].y, navMeshAgent.path.corners[i].z);
-            _agentPathRenderer.SetPosition(i, nextPoint);
+            agentPathRenderer.SetPosition(i, nextPoint);
         }
     }
 }
