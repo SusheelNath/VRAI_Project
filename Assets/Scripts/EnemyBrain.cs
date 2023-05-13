@@ -10,6 +10,7 @@ public class EnemyBrain : MonoBehaviour
 {
     GameManager _gameManager;
     AIManager _aiManager;
+    ViewLineRenderManager _lineRenderManager;
 
     // Stopping distance to player, closer than which the player is 'caught'
     float _stoppingDistanceToPlayer = 1f;
@@ -27,6 +28,9 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent Name")]
     public Text agentName;
 
+    [Header("Agent Path Line Render")]
+    public LineRenderer agentPathRenderer;
+
     [HideInInspector]
     // Last known player position
     public Vector3 playerPosition;
@@ -35,12 +39,11 @@ public class EnemyBrain : MonoBehaviour
     // By default, agent is patrolling
     public bool isPatrolling = true;
 
-    public LineRenderer agentPathRenderer;
-
     void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
         _aiManager = FindObjectOfType<AIManager>();
+        _lineRenderManager = FindObjectOfType<ViewLineRenderManager>();
 
         // Set Default values
         playerPosition = Vector3.zero;
@@ -55,15 +58,7 @@ public class EnemyBrain : MonoBehaviour
         GetComponentInChildren<Canvas>().worldCamera = Camera.main;
 
         // Initialise agent path renderer
-        InitialiseAgentPathRenderer();
-    }
-
-    // Set agent path renderer details
-    void InitialiseAgentPathRenderer()
-    {
-        agentPathRenderer.startWidth = 0.8f;
-        agentPathRenderer.endWidth = 0.8f;
-        agentPathRenderer.positionCount = 0;
+        _lineRenderManager.InitialiseAgentViewRenderer(agentPathRenderer);
     }
 
     void Update()
@@ -88,7 +83,7 @@ public class EnemyBrain : MonoBehaviour
 
         // Agent has path, render path
         if (navMeshAgent.hasPath)
-            DrawAgentPath();
+            _lineRenderManager.DrawAgentPath(agentPathRenderer, navMeshAgent);
     }
 
     string IDRandomiser()
@@ -139,19 +134,5 @@ public class EnemyBrain : MonoBehaviour
     {
         if(collision.transform.tag == "Player")
             CaughtPlayer();
-    }
-
-    // Renders path of travel of agent
-    void DrawAgentPath()
-    {
-        agentPathRenderer.positionCount = navMeshAgent.path.corners.Length;
-        agentPathRenderer.SetPosition(0, transform.position);
-
-        for(int i = 1; i < navMeshAgent.path.corners.Length; i++)
-        {
-            Vector3 nextPoint = new Vector3(navMeshAgent.path.corners[i].x,
-                navMeshAgent.path.corners[i].y, navMeshAgent.path.corners[i].z);
-            agentPathRenderer.SetPosition(i, nextPoint);
-        }
     }
 }
