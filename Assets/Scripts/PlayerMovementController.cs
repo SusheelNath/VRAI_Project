@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Script responsible for player movement on x-axis and z-axis using mouse controls.
-/// * Script replace-able with XR Rig  
+/// * Script replace-able with XRInput  
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {

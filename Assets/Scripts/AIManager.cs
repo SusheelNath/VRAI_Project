@@ -6,9 +6,6 @@ using UnityEngine.AI;
 /// </summary>
 public class AIManager : MonoBehaviour
 {
-    [HideInInspector]
-    public bool hasGameplayEnded = false;
-
     [Header("Difficulty fields reflected onto player and agent alike")]
     // Radius around which the entity would search (create Physics Sphere)
     public float viewRadius = 15f;

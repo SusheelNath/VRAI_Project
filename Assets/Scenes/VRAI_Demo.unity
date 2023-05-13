@@ -361,8 +361,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26189b2c161474aeaa52a200bec91f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentLineRenderer: {fileID: 0}
-  _playerLineRenderer: {fileID: 0}
 --- !u!1 &217785951
 GameObject:
   m_ObjectHideFlags: 0
@@ -1828,7 +1826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18b4e57ae31d846858d5e370f37feea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasGameplayEnded: 0
   viewRadius: 15
   viewAngle: 75
   obstacleMask:

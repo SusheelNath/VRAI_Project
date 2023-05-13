@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using static Enums;
+
 /// <summary>
 /// Script responsible for pooling and spawning enemy agents
 /// </summary>
@@ -11,21 +13,14 @@ public class EnemyAgentPool : MonoBehaviour
 
     private Queue<GameObject> agentPool;
 
+    // All enemy agent (Scriptable Objects) types created
+    [Header("Agent Types")]
     [SerializeField]
     private List<AgentData> agentDetails;
 
     [Header("No. of Agents allowed per spawner")]
     [SerializeField]
     private int _queueLimit = 6;
-
-    // Enumerator definition for agent type editor dropdown
-    public enum AgentTypes
-    {
-        EASY = 0,
-        MEDIUM = 1,
-        DIFFICULT = 2,
-        RANDOM = 3
-    }
 
     [Header("Default Agent type to use")]
     [SerializeField]

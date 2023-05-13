@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Script responsible as Action container
+/// </summary>
 public static class Actions
 {
     // AIManager Delegates

@@ -9,8 +9,8 @@ using UnityEngine.UI;
 public class EnemyBrain : MonoBehaviour
 {
     // Stopping distance to player, closer than which the player is 'caught'
-    float _stoppingDistanceToPlayer = 1f;
-    float _acceleration = 100f;
+    readonly float _stoppingDistanceToPlayer = 1f;
+    readonly float _acceleration = 100f;
 
     [Header("Agent Reference")]
     public NavMeshAgent navMeshAgent;
@@ -18,7 +18,7 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent difficulty settings")]
     public float speed;
 
-    [Header("LayerMasks to determine Player/Obstacle")]
+    [Header("LayerMask to determine Player")]
     public LayerMask playerMask;
 
     [Header("Agent Name")]
@@ -38,6 +38,10 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent Mesh")]
     public MeshRenderer agentBodyRenderer;
 
+    // Distance around the radius of enemy where a new destination is validated & obtained
+    [Header("Agent New Destination Radius")]
+    public int distanceToFindNewDestination = 10;
+
     [HideInInspector]
     // Last known player position
     public Vector3 playerPosition;
@@ -45,10 +49,6 @@ public class EnemyBrain : MonoBehaviour
     [HideInInspector]
     // By default, agent is patrolling
     public bool isPatrolling = true;
-
-    // Distance around the radius of enemy where a new destination is validated & obtained
-    [Header("Agent New Destination Radius")]
-    public int distanceToFindNewDestination = 10;
 
     void Start()
     {

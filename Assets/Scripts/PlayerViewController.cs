@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Script responsible for player view on x-axis and y-axis using mouse controls.
-/// * Script replace-able with XR Rig    
+/// * Script replace-able with XRRig    
 /// </summary>
 public class PlayerViewController : MonoBehaviour
 {

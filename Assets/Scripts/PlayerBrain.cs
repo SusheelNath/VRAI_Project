@@ -6,9 +6,11 @@ using UnityEngine;
 /// </summary>
 public class PlayerBrain : MonoBehaviour
 {
+    [Header("Line Renderer positions")]
     public Transform lineRendererStartPoint;
     public Transform lineRendererEndPoint;
 
+    [Header("Player View Line Renderer reference")]
     public LineRenderer playerViewRenderer;
 
     void Start()

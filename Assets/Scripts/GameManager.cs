@@ -9,9 +9,6 @@ public class GameManager : MonoBehaviour
 {
     bool _isStartGameplay = false;
 
-    [Header("Script References")]
-    public UIManager uiManager;
-
     [Header("First Person Script References")]
     public PlayerMovementController fpcMovement;
     public PlayerViewController fpcView;
