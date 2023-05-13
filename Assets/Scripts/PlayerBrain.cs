@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerBrain : MonoBehaviour
 {
-    AIManager _aiManager;
     ViewLineRenderManager _lineRenderManager;
 
     public Transform lineRendererStartPoint;
@@ -16,7 +15,6 @@ public class PlayerBrain : MonoBehaviour
 
     void Start()
     {
-        _aiManager = FindObjectOfType<AIManager>();
         _lineRenderManager = FindAnyObjectByType<ViewLineRenderManager>();
 
         // Initialise player view renderer
@@ -26,7 +24,7 @@ public class PlayerBrain : MonoBehaviour
     void Update()
     {
         // Check vicinity of player to determine if the agents are nearby
-        _aiManager.CheckForAgentsAround(transform);
+        Actions.OnCheckEnemyAroundSelf(transform);
 
         // Draw render line from player position to their line of sight
         _lineRenderManager.DrawPlayerView(lineRendererStartPoint, lineRendererEndPoint);

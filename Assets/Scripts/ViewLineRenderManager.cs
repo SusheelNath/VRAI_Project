@@ -3,8 +3,8 @@ using UnityEngine.AI;
 
 public class ViewLineRenderManager : MonoBehaviour
 {
-    public LineRenderer _agentLineRenderer;
-    public LineRenderer _playerLineRenderer;
+    LineRenderer _agentLineRenderer;
+    LineRenderer _playerLineRenderer;
 
     // Renders view line of entity
     public void DrawPlayerView(Transform startPoint, Transform endPoint)
