@@ -120,6 +120,10 @@ public class AIManager : MonoBehaviour
             //  Distance between enemy and player
             float dstToPlayer = Vector3.Distance(agent.position, _playerPosition);
 
+            // Set Alert
+            if (dstToPlayer <= viewRadius && selfBrain.isPatrolling)
+                selfBrain.Alert();
+
             // View angle 2 times than player's permitted
             var agentViewAngle = 2f * viewAngle;
 
