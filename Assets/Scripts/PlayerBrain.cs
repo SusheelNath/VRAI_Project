@@ -6,8 +6,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerBrain : MonoBehaviour
 {
-    ViewLineRenderManager _lineRenderManager;
-
     public Transform lineRendererStartPoint;
     public Transform lineRendererEndPoint;
 
@@ -15,10 +13,8 @@ public class PlayerBrain : MonoBehaviour
 
     void Start()
     {
-        _lineRenderManager = FindAnyObjectByType<ViewLineRenderManager>();
-
         // Initialise player view renderer
-        _lineRenderManager.InitialisePlayerViewRenderer(playerViewRenderer);
+        Actions.OnInitialisePlayerRenderer(this);
     }
 
     void Update()
@@ -27,6 +23,6 @@ public class PlayerBrain : MonoBehaviour
         Actions.OnCheckEnemyAroundSelf(transform);
 
         // Draw render line from player position to their line of sight
-        _lineRenderManager.DrawPlayerView(lineRendererStartPoint, lineRendererEndPoint);
+        Actions.OnDrawPlayerPath(this);
     }
 }

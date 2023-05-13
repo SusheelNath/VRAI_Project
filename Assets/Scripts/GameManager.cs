@@ -17,6 +17,18 @@ public class GameManager : MonoBehaviour
     public PlayerViewController fpcView;
     public PlayerBrain fpBrain;
 
+    // Subscribe
+    void OnEnable()
+    {
+        Actions.OnRestartScene += RestartScene;
+    }
+
+    // UnSubscribe
+    void OnDisable()
+    {
+        Actions.OnRestartScene -= RestartScene;
+    }
+
     void Update()
     {
         if(_isStartGameplay == false)
@@ -27,7 +39,8 @@ public class GameManager : MonoBehaviour
                 _isStartGameplay = true;
 
                 // Begin Gameplay Sequencing
-                uiManager.SetBeginGameplayUI();
+                Actions.OnGameplayStart();
+
                 SetFPComponentsActive();
                 SetEnemyAgentSpawnersActive();
             }
@@ -63,7 +76,7 @@ public class GameManager : MonoBehaviour
     IEnumerator RestartSequence()
     {
         // End Gameplay Sequencing
-        uiManager.SetEndGameplayUI();
+        Actions.OnGameplayEnd();
 
         yield return new WaitForSeconds(2f);
 

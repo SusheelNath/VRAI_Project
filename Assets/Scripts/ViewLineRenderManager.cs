@@ -1,47 +1,70 @@
 using UnityEngine;
-using UnityEngine.AI;
 
+/// <summary>
+/// Script responsible for rendering agent and player path/view lines respectively
+/// </summary>
 public class ViewLineRenderManager : MonoBehaviour
 {
     LineRenderer _agentLineRenderer;
     LineRenderer _playerLineRenderer;
 
-    // Renders view line of entity
-    public void DrawPlayerView(Transform startPoint, Transform endPoint)
+    // Subscribe
+    void OnEnable()
     {
-        _playerLineRenderer.SetPosition(0, startPoint.position);
-        _playerLineRenderer.SetPosition(1, endPoint.position);
+        Actions.OnInitialisePlayerRenderer += InitialisePlayerViewRenderer;
+        Actions.OnInitialiseAgentRenderer += InitialiseAgentViewRenderer;
+        Actions.OnDrawPlayerPath += DrawPlayerViewPath;
+        Actions.OnDrawAgentPath += DrawAgentPath;
+    }
+
+    // UnSubscribe
+    void OnDisable()
+    {
+        Actions.OnInitialisePlayerRenderer -= InitialisePlayerViewRenderer;
+        Actions.OnInitialiseAgentRenderer -= InitialiseAgentViewRenderer;
+        Actions.OnDrawPlayerPath -= DrawPlayerViewPath;
+        Actions.OnDrawAgentPath -= DrawAgentPath;
+    }
+
+    // Renders view line of entity
+    public void DrawPlayerViewPath(PlayerBrain player)
+    {
+        _playerLineRenderer.SetPosition(0, player.lineRendererStartPoint.position);
+        _playerLineRenderer.SetPosition(1, player.lineRendererEndPoint.position);
     }
 
     // Set Player view renderer details
-    public void InitialisePlayerViewRenderer(LineRenderer render)
+    public void InitialisePlayerViewRenderer(PlayerBrain player)
     {
-        _playerLineRenderer = render;
+        _playerLineRenderer = player.playerViewRenderer;
         _playerLineRenderer.startWidth = 0.8f;
         _playerLineRenderer.endWidth = 0.8f;
         _playerLineRenderer.positionCount = 2;
     }
 
     // Set Agent view renderer details
-    public void InitialiseAgentViewRenderer(LineRenderer render)
+    public void InitialiseAgentViewRenderer(EnemyBrain enemy)
     {
-        _agentLineRenderer = render;
+        _agentLineRenderer = enemy.agentPathRenderer;
         _agentLineRenderer.startWidth = 0.8f;
         _agentLineRenderer.endWidth = 0.8f;
         _agentLineRenderer.positionCount = 0;
     }
 
     // Renders path of travel of agent
-    public void DrawAgentPath(LineRenderer agentRender, NavMeshAgent navAgent)
+    public void DrawAgentPath(EnemyBrain enemy)
     {
-        agentRender.positionCount = navAgent.path.corners.Length;
-        agentRender.SetPosition(0, navAgent.transform.position);
+        var agentRenderer = enemy.agentPathRenderer;
+        var navAgent = enemy.navMeshAgent;
+
+        agentRenderer.positionCount = navAgent.path.corners.Length;
+        agentRenderer.SetPosition(0, navAgent.transform.position);
 
         for (int i = 1; i < navAgent.path.corners.Length; i++)
         {
             Vector3 nextPoint = new Vector3(navAgent.path.corners[i].x,
                 navAgent.path.corners[i].y, navAgent.path.corners[i].z);
-            agentRender.SetPosition(i, nextPoint);
+            agentRenderer.SetPosition(i, nextPoint);
         }
     }
 }

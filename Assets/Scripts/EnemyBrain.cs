@@ -8,9 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class EnemyBrain : MonoBehaviour
 {
-    GameManager _gameManager;
-    ViewLineRenderManager _lineRenderManager;
-
     // Stopping distance to player, closer than which the player is 'caught'
     float _stoppingDistanceToPlayer = 1f;
     float _acceleration = 100f;
@@ -55,9 +52,19 @@ public class EnemyBrain : MonoBehaviour
 
     void Start()
     {
-        _gameManager = FindObjectOfType<GameManager>();
-        _lineRenderManager = FindObjectOfType<ViewLineRenderManager>();
+        // Set values
+        InitialiseAgent();
 
+        // Assign Player camera to Agent Canvas
+        GetComponentInChildren<Canvas>().worldCamera = Camera.main;
+
+        // Initialise agent path renderer
+        Actions.OnInitialiseAgentRenderer(this);
+    }
+
+    // Assign provided values and name
+    void InitialiseAgent()
+    {
         // Set Default values
         playerPosition = Vector3.zero;
         navMeshAgent.acceleration = _acceleration;
@@ -66,12 +73,15 @@ public class EnemyBrain : MonoBehaviour
 
         // Assign random ID to differentiate
         agentName.text = IDRandomiser();
+    }
 
-        // Assign Player camera to Agent Canvas
-        GetComponentInChildren<Canvas>().worldCamera = Camera.main;
-
-        // Initialise agent path renderer
-        _lineRenderManager.InitialiseAgentViewRenderer(agentPathRenderer);
+    // Randomise Agent ID (Name)
+    string IDRandomiser()
+    {
+        string id = Random.Range(0, 10).ToString() +
+                    Random.Range(0, 10).ToString() +
+                    Random.Range(0, 10).ToString();
+        return id;
     }
 
     void Update()
@@ -96,16 +106,7 @@ public class EnemyBrain : MonoBehaviour
 
         // Agent has path, render path
         if (navMeshAgent.hasPath)
-            _lineRenderManager.DrawAgentPath(agentPathRenderer, navMeshAgent);
-    }
-
-    // Randomise Agent ID (Name)
-    string IDRandomiser()
-    {
-        string id = Random.Range(0, 10).ToString() +
-                    Random.Range(0, 10).ToString() +
-                    Random.Range(0, 10).ToString();
-        return id;
+            Actions.OnDrawAgentPath(this);
     }
 
     // The agent is alert
@@ -148,7 +149,7 @@ public class EnemyBrain : MonoBehaviour
     // Redirect to GameManager to restart scene on caught
     void CaughtPlayer()
     {
-        _gameManager.RestartScene();
+        Actions.OnRestartScene();
     }
 
     // Assign said material to agent mesh and line renderer
