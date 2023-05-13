@@ -281,9 +281,11 @@ MonoBehaviour:
   patrolMaterial: {fileID: 2100000, guid: 63a33fbe30bc447cab0c6db8d31f2663, type: 2}
   alertMaterial: {fileID: 2100000, guid: 9ed0009368f294a909d9cce360c044c1, type: 2}
   chaseMaterial: {fileID: 2100000, guid: 09fc45bc976a3416391e0f867521d36d, type: 2}
+  stoppedMaterial: {fileID: 2100000, guid: 8c721d90f63ad40a7ad6d97f3c4ad9d5, type: 2}
   agentBodyRenderer: {fileID: 1626482920192394793}
   playerPosition: {x: 0, y: 0, z: 0}
   isPatrolling: 1
+  distanceToFindNewDestination: 10
 --- !u!1 &6602473950243502405
 GameObject:
   m_ObjectHideFlags: 0

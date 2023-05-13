@@ -16,6 +16,20 @@ public class UIManager : MonoBehaviour
     [Header("Minimap UI")]
     public GameObject minimapGO;
 
+    // Subscribe
+    void OnEnable()
+    {
+        Actions.OnGameplayStart += SetBeginGameplayUI;
+        Actions.OnGameplayEnd += SetEndGameplayUI;
+    }
+
+    // UnSubscribe
+    void OnDisable()
+    {
+        Actions.OnGameplayStart -= SetBeginGameplayUI;
+        Actions.OnGameplayEnd -= SetEndGameplayUI;
+    }
+
     // Present Start Gameplay Sequence UI
     public void SetBeginGameplayUI()
     {

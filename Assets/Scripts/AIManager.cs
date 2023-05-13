@@ -6,8 +6,6 @@ using UnityEngine.AI;
 /// </summary>
 public class AIManager : MonoBehaviour
 {
-    GameManager _gameManager;
-
     [HideInInspector]
     public bool hasGameplayEnded = false;
 
@@ -29,38 +27,41 @@ public class AIManager : MonoBehaviour
     // Last known player position
     Vector3 _playerPosition;
 
-    void Start()
+    // Subscribe
+    void OnEnable()
     {
-        _gameManager = FindObjectOfType<GameManager>();
+        Actions.OnFindNextDestination += RandomNavSphere;
+        Actions.OnCheckEnemyAroundSelf += CheckForEnemiesAround;
+        Actions.OnCheckPlayerAroundSelf += CheckForPlayerAround;
     }
 
-    void Update()
+    // Unsubscribe
+    void OnDisable()
     {
-        if (hasGameplayEnded)
-        {
-            _gameManager.RestartScene();
-        }
+        Actions.OnFindNextDestination -= RandomNavSphere;
+        Actions.OnCheckEnemyAroundSelf -= CheckForEnemiesAround;
+        Actions.OnCheckPlayerAroundSelf -= CheckForPlayerAround;
     }
 
     // Given current position of agent when called, given distance around to search,
     // find next valid position on NavMesh
-    public Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
+    public Vector3 RandomNavSphere(EnemyBrain enemy)
     {
-        // Find random direction inside a sphere of 1.0 * distance (here, 10)
-        Vector3 _randomDirection = Random.insideUnitSphere * distance;
+        // Find random direction inside a sphere of 1.0 * distance
+        Vector3 _randomDirection = Random.insideUnitSphere * enemy.distanceToFindNewDestination;
 
         // Add said distance vector to current transform of agent
-        _randomDirection += origin;
+        _randomDirection += enemy.transform.position;
 
         // Check if the new position (randomDirection) is valid (inside the NavMesh region)
         NavMeshHit navHit;
-        NavMesh.SamplePosition(_randomDirection, out navHit, distance, layermask);
+        NavMesh.SamplePosition(_randomDirection, out navHit, enemy.distanceToFindNewDestination, -1);
 
         return navHit.position;
     }
 
     // Physics Overlapping Sphere to check for agents around vicinity (Concerned with PlayerBrain)
-    public void CheckForAgentsAround(Transform player)
+    public void CheckForEnemiesAround(Transform player)
     {
         //  Create overlapping colliders to detect the playermask in the view radius
         Collider[] agentsInRange = Physics.OverlapSphere(player.position, viewRadius, agentMask);
@@ -99,13 +100,13 @@ public class AIManager : MonoBehaviour
     }
 
     // Physics Overlapping Sphere to check for player position and vicinity (Concerned with EnemyBrain)
-    public void CheckForPlayerAround(Transform agent, EnemyBrain selfBrain)
+    public void CheckForPlayerAround(EnemyBrain selfBrain)
     {
         // View radius 2 times than player's permitted
         var agentScanRadius = 2f * viewRadius;
 
         //  Create overlapping colliders to detect the playermask in the agent's scan radius 
-        Collider[] playerInRange = Physics.OverlapSphere(agent.position, agentScanRadius, playerMask);
+        Collider[] playerInRange = Physics.OverlapSphere(selfBrain.transform.position, agentScanRadius, playerMask);
 
         // If detected
         for (int i = 0; i < playerInRange.Length; i++)
@@ -115,10 +116,10 @@ public class AIManager : MonoBehaviour
             selfBrain.playerPosition = _playerPosition;
 
             // Determine direction vector
-            Vector3 dirToPlayer = (_playerPosition - agent.position).normalized;
+            Vector3 dirToPlayer = (_playerPosition - selfBrain.transform.position).normalized;
 
             //  Distance between enemy and player
-            float dstToPlayer = Vector3.Distance(agent.position, _playerPosition);
+            float dstToPlayer = Vector3.Distance(selfBrain.transform.position, _playerPosition);
 
             // Set Alert
             if (dstToPlayer <= viewRadius && selfBrain.isPatrolling)
@@ -128,10 +129,10 @@ public class AIManager : MonoBehaviour
             var agentViewAngle = 2f * viewAngle;
 
             // If in agent's view angle
-            if (Vector3.Angle(agent.forward, dirToPlayer) < agentViewAngle / 2)
+            if (Vector3.Angle(selfBrain.transform.forward, dirToPlayer) < agentViewAngle / 2)
             {
                 // If Raycast hit player, chase player
-                if (!Physics.Raycast(agent.position, dirToPlayer, dstToPlayer, obstacleMask))
+                if (!Physics.Raycast(selfBrain.transform.position, dirToPlayer, dstToPlayer, obstacleMask))
                     selfBrain.isPatrolling = false;
                 // Player is behind obstacle and agent will stop chasing
                 else
@@ -139,7 +140,7 @@ public class AIManager : MonoBehaviour
             }
 
             // If not in view range, change state to patrolling
-            if (Vector3.Distance(agent.position, _playerPosition) > agentScanRadius)
+            if (Vector3.Distance(selfBrain.transform.position, _playerPosition) > agentScanRadius)
                 selfBrain.isPatrolling = true;
         }
     }
