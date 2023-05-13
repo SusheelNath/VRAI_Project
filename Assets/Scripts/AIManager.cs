@@ -120,12 +120,16 @@ public class AIManager : MonoBehaviour
             //  Distance between enemy and player
             float dstToPlayer = Vector3.Distance(agent.position, _playerPosition);
 
+            // Set Alert
+            if (dstToPlayer <= viewRadius && selfBrain.isPatrolling)
+                selfBrain.Alert();
+
             // View angle 2 times than player's permitted
             var agentViewAngle = 2f * viewAngle;
 
             // If in agent's view angle
             if (Vector3.Angle(agent.forward, dirToPlayer) < agentViewAngle / 2)
-            {                
+            {
                 // If Raycast hit player, chase player
                 if (!Physics.Raycast(agent.position, dirToPlayer, dstToPlayer, obstacleMask))
                     selfBrain.isPatrolling = false;

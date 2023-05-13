@@ -10,10 +10,11 @@ public class EnemyBrain : MonoBehaviour
 {
     GameManager _gameManager;
     AIManager _aiManager;
+    ViewLineRenderManager _lineRenderManager;
 
     // Stopping distance to player, closer than which the player is 'caught'
     float _stoppingDistanceToPlayer = 1f;
-    float _acceleration = 8f;
+    float _acceleration = 100f;
 
     [Header("Agent Reference")]
     public NavMeshAgent navMeshAgent;
@@ -27,6 +28,20 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent Name")]
     public Text agentName;
 
+    [Header("Agent Body")]
+    public GameObject agentBody;
+
+    [Header("Agent Path Line Render")]
+    public LineRenderer agentPathRenderer;
+
+    [Header("Agent Materials (Patrol/Alert/Chase)")]
+    public Material patrolMaterial;
+    public Material alertMaterial;
+    public Material chaseMaterial;
+
+    [Header("Agent Mesh")]
+    public MeshRenderer agentBodyRenderer;
+
     [HideInInspector]
     // Last known player position
     public Vector3 playerPosition;
@@ -39,6 +54,7 @@ public class EnemyBrain : MonoBehaviour
     {
         _gameManager = FindObjectOfType<GameManager>();
         _aiManager = FindObjectOfType<AIManager>();
+        _lineRenderManager = FindObjectOfType<ViewLineRenderManager>();
 
         // Set Default values
         playerPosition = Vector3.zero;
@@ -51,6 +67,9 @@ public class EnemyBrain : MonoBehaviour
 
         // Assign Player camera to Agent Canvas
         GetComponentInChildren<Canvas>().worldCamera = Camera.main;
+
+        // Initialise agent path renderer
+        _lineRenderManager.InitialiseAgentViewRenderer(agentPathRenderer);
     }
 
     void Update()
@@ -70,8 +89,12 @@ public class EnemyBrain : MonoBehaviour
         }
 
         // Agent Name Text always faces player camera
-        agentName.transform.LookAt(agentName.transform.position -
-            (Camera.main.transform.position - agentName.transform.position));
+        agentBody.transform.LookAt(agentBody.transform.position -
+            (Camera.main.transform.position - agentBody.transform.position));
+
+        // Agent has path, render path
+        if (navMeshAgent.hasPath)
+            _lineRenderManager.DrawAgentPath(agentPathRenderer, navMeshAgent);
     }
 
     string IDRandomiser()
@@ -82,19 +105,21 @@ public class EnemyBrain : MonoBehaviour
         return id;
     }
 
+    // The agent is alert
+    public void Alert()
+    {
+        agentBodyRenderer.material = alertMaterial;
+        agentPathRenderer.material = alertMaterial;
+    }
+
     // The agent is chasing the player
     void Chasing()
     {
         // Set the destination of the enemy to the player location
         navMeshAgent.SetDestination(playerPosition);
 
-        /*
-        // If Enemy caught upto player's stoppin distance (Default = 1f)
-        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        {
-            CaughtPlayer();
-        }
-        */
+        agentBodyRenderer.material = chaseMaterial;
+        agentPathRenderer.material = chaseMaterial;
     }
 
     //  The agent is patrolling to random valid position on NavMesh
@@ -104,6 +129,9 @@ public class EnemyBrain : MonoBehaviour
         if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
         {
             navMeshAgent.SetDestination(_aiManager.RandomNavSphere(transform.position, 10f, -1));
+
+            agentBodyRenderer.material = patrolMaterial;
+            agentPathRenderer.material = patrolMaterial;
         }
     }
 
