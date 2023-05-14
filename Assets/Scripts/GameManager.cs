@@ -14,6 +14,12 @@ public class GameManager : MonoBehaviour
     public PlayerViewController fpcView;
     public PlayerBrain fpBrain;
 
+    [Header("Parent object of gameplay in scene")]
+    public GameObject levelObjects;
+
+    [Header("Game Over Audio")]
+    public AudioSource gameOver;
+
     // Subscribe
     void OnEnable()
     {
@@ -75,9 +81,23 @@ public class GameManager : MonoBehaviour
         // End Gameplay Sequencing
         Actions.OnGameplayEnd();
 
-        yield return new WaitForSeconds(2f);
+        // Deactivate FPC components
+        SetFPComponentsDeactive();
+        levelObjects.SetActive(false);
+
+        gameOver.Play();
+
+        yield return new WaitForSeconds(4f);
 
         // Load/Reload scene
         SceneManager.LoadSceneAsync("VRAI_Demo");
+    }
+
+    // Deactivate First Person Component scripts
+    public void SetFPComponentsDeactive()
+    {
+        fpcMovement.enabled = false;
+        fpcView.enabled = false;
+        fpBrain.enabled = false;
     }
 }

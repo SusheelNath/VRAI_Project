@@ -6,14 +6,14 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {
-    CharacterController _characterController;
+    public CharacterController characterController;
 
     // Moving speed of character controller
     public float speed = 12f;
 
     void Start()
     {
-        _characterController = FindObjectOfType<CharacterController>();
+        characterController = FindObjectOfType<CharacterController>();
     }
 
     void Update()
@@ -26,6 +26,6 @@ public class PlayerMovementController : MonoBehaviour
         Vector3 moveDirection = transform.right * x + transform.forward * z;
 
         // Move character controller in set direction
-        _characterController.Move(moveDirection * speed * Time.deltaTime);
+        characterController.Move(moveDirection * speed * Time.deltaTime);
     }
 }
