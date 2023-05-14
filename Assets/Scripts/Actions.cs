@@ -10,6 +10,7 @@ public static class Actions
     public static Func<EnemyBrain, Vector3> OnFindNextDestination;
     public static Action<EnemyBrain>  OnCheckPlayerAroundSelf;
     public static Action<Transform> OnCheckEnemyAroundSelf;
+    public static Action<GameObject> OnLookAtPlayer;
 
     // GameManager Delegates
     public static Action OnRestartScene;

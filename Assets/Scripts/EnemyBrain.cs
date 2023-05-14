@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static Enums;
 
 /// <summary>
 /// Script representing the Enemy Agent Brain.
@@ -27,6 +29,9 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent Body")]
     public GameObject agentBody;
 
+    [Header("Agent State Image")]
+    public Image agentImage;
+
     [Header("Agent Path Line Render")]
     public LineRenderer agentPathRenderer;
 
@@ -42,13 +47,27 @@ public class EnemyBrain : MonoBehaviour
     [Header("Agent New Destination Radius")]
     public int distanceToFindNewDestination = 10;
 
+    [Header("Agent Audios")]
+    [SerializeField]
+    AudioSource _chasingSound;
+
+    [SerializeField]
+    AudioSource _footsteps;
+
+    // Current agent state
+    [Header("Agent State")]
+    public AgentState agentState = AgentState.PATROLLING;
+
+    // Current agent state
+    [Header("Agent State Image Representations")]
+    public List<Sprite> stateImages;
+
     [HideInInspector]
     // Last known player position
     public Vector3 playerPosition;
 
-    [HideInInspector]
-    // By default, agent is patrolling
-    public bool isPatrolling = true;
+    // Determine if chasing audio has been played
+    bool _isChasingAudioPlayed = false;
 
     void Start()
     {
@@ -89,24 +108,15 @@ public class EnemyBrain : MonoBehaviour
         // Check vicinity of agent to determine if the player is nearby
         Actions.OnCheckPlayerAroundSelf(this);
 
-        // Chasing State
-        if (!isPatrolling)
-        {
-            Chasing();
-        }
-        // Patrolling State
-        else
-        {
-            Patrolling();
-        }
-
-        // Agent Name Text always faces player camera
-        agentBody.transform.LookAt(agentBody.transform.position -
-            (Camera.main.transform.position - agentBody.transform.position));
+        // Make the agent components faces user constantly
+        Actions.OnLookAtPlayer(agentBody);
 
         // Agent has path, render path
         if (navMeshAgent.hasPath)
             Actions.OnDrawAgentPath(this);
+
+        // Determine agent state action
+        DetermineStateAction();
     }
 
     // The agent is alert
@@ -115,12 +125,37 @@ public class EnemyBrain : MonoBehaviour
         SetAgentMaterial(alertMaterial);
     }
 
+    // State Machine method
+    void DetermineStateAction()
+    {
+        switch (agentState)
+        {
+            case AgentState.PATROLLING:
+                Patrolling();
+                break;
+            case AgentState.ALERT:
+                Alert();
+                break;
+            case AgentState.CHASING:
+                Chasing();
+                break;
+        }
+
+        agentImage.sprite = stateImages[(int)agentState];
+    }
+
     // The agent is chasing the player
     void Chasing()
     {
         // Set the destination of the enemy to the player location
         navMeshAgent.SetDestination(playerPosition);
         SetAgentMaterial(chaseMaterial);
+
+        if (_isChasingAudioPlayed == false)
+        {
+            PlayAudio(_chasingSound);
+            _isChasingAudioPlayed = true;
+        }
     }
 
     //  The agent is patrolling to random valid position on NavMesh
@@ -131,13 +166,33 @@ public class EnemyBrain : MonoBehaviour
         {
             navMeshAgent.SetDestination(Actions.OnFindNextDestination(this));
             SetAgentMaterial(patrolMaterial);
+
+            if (_footsteps.isPlaying == false)
+            {
+                PlayAudio(_footsteps);
+            }
         }
+
+        _isChasingAudioPlayed = false;
     }
 
     // Stops all NavMesh movement
     public void StopMovement()
     {
         navMeshAgent.isStopped = true;
+        StopAudio(_footsteps);
+    }
+
+    // Play provided audio
+    void PlayAudio(AudioSource audio)
+    {
+        audio.Play();
+    }
+
+    // Stop footstep audio of current agent
+    void StopAudio(AudioSource audio)
+    {
+        audio.Stop();
     }
 
     // Resumes all NavMesh movement
