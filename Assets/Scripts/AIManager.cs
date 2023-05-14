@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static Enums;
 
 /// <summary>
 /// Script managing all AI brains overall.
@@ -10,7 +11,7 @@ public class AIManager : MonoBehaviour
     // Radius around which the entity would search (create Physics Sphere)
     public float viewRadius = 15f;
     // Angle under which the said entity will pursuit mask-enveloped entity
-    public float viewAngle = 75f; 
+    public float viewAngle = 75f;
 
     [Header("LayerMasks")]
     public LayerMask obstacleMask;
@@ -30,6 +31,7 @@ public class AIManager : MonoBehaviour
         Actions.OnFindNextDestination += RandomNavSphere;
         Actions.OnCheckEnemyAroundSelf += CheckForEnemiesAround;
         Actions.OnCheckPlayerAroundSelf += CheckForPlayerAround;
+        Actions.OnLookAtPlayer += ObjectLookAtPlayer;
     }
 
     // Unsubscribe
@@ -38,6 +40,7 @@ public class AIManager : MonoBehaviour
         Actions.OnFindNextDestination -= RandomNavSphere;
         Actions.OnCheckEnemyAroundSelf -= CheckForEnemiesAround;
         Actions.OnCheckPlayerAroundSelf -= CheckForPlayerAround;
+        Actions.OnLookAtPlayer -= ObjectLookAtPlayer;
     }
 
     // Given current position of agent when called, given distance around to search,
@@ -81,7 +84,10 @@ public class AIManager : MonoBehaviour
             {
                 // If Raycast hit agent, stop agent
                 if (!Physics.Raycast(player.position, dirToAgent, dstToAgent, obstacleMask))
+                {
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().StopMovement();
+                }
+
                 // Agent is behind obstacle and will resume its movement
                 else
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().ResumeMovement();
@@ -119,8 +125,8 @@ public class AIManager : MonoBehaviour
             float dstToPlayer = Vector3.Distance(selfBrain.transform.position, _playerPosition);
 
             // Set Alert
-            if (dstToPlayer <= viewRadius && selfBrain.isPatrolling)
-                selfBrain.Alert();
+            if (dstToPlayer <= viewRadius && selfBrain.agentState == AgentState.PATROLLING)
+                selfBrain.agentState = AgentState.ALERT;
 
             // View angle 2 times than player's permitted
             var agentViewAngle = 2f * viewAngle;
@@ -130,15 +136,23 @@ public class AIManager : MonoBehaviour
             {
                 // If Raycast hit player, chase player
                 if (!Physics.Raycast(selfBrain.transform.position, dirToPlayer, dstToPlayer, obstacleMask))
-                    selfBrain.isPatrolling = false;
+                        selfBrain.agentState = AgentState.CHASING;
                 // Player is behind obstacle and agent will stop chasing
                 else
-                    selfBrain.isPatrolling = true;
+                    selfBrain.agentState = AgentState.PATROLLING;
             }
 
             // If not in view range, change state to patrolling
             if (Vector3.Distance(selfBrain.transform.position, _playerPosition) > agentScanRadius)
-                selfBrain.isPatrolling = true;
+                selfBrain.agentState = AgentState.PATROLLING;
         }
+    }
+
+    // Provided gameobject looks at player camera
+    public void ObjectLookAtPlayer(GameObject objectInConcern)
+    {
+        // Agent Name Text always faces player camera
+        objectInConcern.transform.LookAt(objectInConcern.transform.position -
+            (Camera.main.transform.position - objectInConcern.transform.position));
     }
 }
