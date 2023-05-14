@@ -153,6 +153,6 @@ public class AIManager : MonoBehaviour
     {
         // Agent Name Text always faces player camera
         objectInConcern.transform.LookAt(objectInConcern.transform.position -
-            (Camera.main.transform.position - objectInConcern.transform.position));
+            (Camera.main.transform.parent.position - objectInConcern.transform.position));
     }
 }
