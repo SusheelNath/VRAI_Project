@@ -69,6 +69,9 @@ public class EnemyBrain : MonoBehaviour
     // Determine if chasing audio has been played
     bool _isChasingAudioPlayed = false;
 
+    // Determine if agent is moving
+    bool _isAgentMoving = true;
+
     void Start()
     {
         // Set values
@@ -123,6 +126,11 @@ public class EnemyBrain : MonoBehaviour
     public void Alert()
     {
         SetAgentMaterial(alertMaterial);
+
+        // Agent is allowed and is permitted to find new destination if player is not in viewsight
+        if(_isAgentMoving)
+            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                navMeshAgent.SetDestination(Actions.OnFindNextDestination(this)); 
     }
 
     // State Machine method
@@ -180,6 +188,8 @@ public class EnemyBrain : MonoBehaviour
     public void StopMovement()
     {
         navMeshAgent.isStopped = true;
+        _isAgentMoving = false;
+
         StopAudio(_footsteps);
     }
 
@@ -199,6 +209,7 @@ public class EnemyBrain : MonoBehaviour
     public void ResumeMovement()
     {
         navMeshAgent.isStopped = false;
+        _isAgentMoving = true;
     }
 
     // Redirect to GameManager to restart scene on caught

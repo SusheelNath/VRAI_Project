@@ -84,10 +84,7 @@ public class AIManager : MonoBehaviour
             {
                 // If Raycast hit agent, stop agent
                 if (!Physics.Raycast(player.position, dirToAgent, dstToAgent, obstacleMask))
-                {
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().StopMovement();
-                }
-
                 // Agent is behind obstacle and will resume its movement
                 else
                     _agentInQuestion.gameObject.GetComponent<EnemyBrain>().ResumeMovement();
